@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { Theme } from '@chakra-ui/react';
 
 function App() {
-  const isAuthenticated = false
+  const isAuthenticated = useSelector(state => state.authentication.isAuthenticated)
   const theme = useSelector(state => state.theme.theme)
 
   return (
