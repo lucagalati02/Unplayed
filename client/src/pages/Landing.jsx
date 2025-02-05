@@ -55,7 +55,7 @@ function Landing() {
               </List.Root>
 
               <Button colorScheme={theme == "dark" ? "white" : "black"} onClick={() => apple_music.LogIn()}>
-                Sign in with Apple
+                Authorize Unplayed with Apple Music
               </Button>
               
               {/* <AppleSignin
