@@ -4,6 +4,7 @@ import { LuCircleCheck, LuSun, LuMoon } from "react-icons/lu"
 import axios from 'axios'
 import ThemeChanger from '../components/ThemeChanger'
 import { useDispatch, useSelector } from 'react-redux';
+import * as apple_music from '../components/apple_music'
 
 function Landing() {
   const dispatch = useDispatch();
@@ -53,7 +54,7 @@ function Landing() {
                 </List.Item>
               </List.Root>
 
-              <Button colorScheme={theme == "dark" ? "white" : "black"} >
+              <Button colorScheme={theme == "dark" ? "white" : "black"} onClick={() => apple_music.LogIn()}>
                 Sign in with Apple
               </Button>
               
