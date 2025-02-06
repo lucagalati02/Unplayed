@@ -1,3 +1,4 @@
+from database import execute_query, execute_post
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
@@ -43,6 +44,28 @@ def decode_apple_id_token(id_token):
         issuer="https://appleid.apple.com",
     )
     return decoded_id_token
+
+def user_exists(EMAIL):
+    query = """
+        SELECT "EMAIL" FROM "public"."APPLE_AUTH" WHERE "EMAIL" = %s
+    """
+    params = (EMAIL,)
+    result = execute_query(query, params)
+    
+    if result:
+        return True
+    else:
+        return False
+    
+def add_user(EMAIL):
+    try:
+        query = """
+            INSERT INTO "public"."USER" ("EMAIL") VALUES (%s)
+        """
+        params = (EMAIL,)
+        execute_post(query, params)
+    except Exception as e:
+        return jsonify({'Error adding user': str(e)}), 500
 
 @app.route('/get_developer_token', methods=['GET', 'POST'])
 def get_developer_token():
@@ -115,7 +138,8 @@ def apple_callback():
     USER_EMAIL = decoded_id_token.get('email')
     USER_VERIFIED = decoded_id_token.get('email_verified')
 
-    # add_user(USER_EMAIL)
+    if not user_exists(USER_EMAIL):
+        add_user(USER_EMAIL)
 
     return jsonify({
         'email': USER_EMAIL,
