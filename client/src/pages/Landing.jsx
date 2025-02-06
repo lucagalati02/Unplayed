@@ -1,6 +1,7 @@
 import React from 'react';
-import { SimpleGrid, Box, Center, VStack, Text, Highlight, Image, List, IconButton, Button } from '@chakra-ui/react';
-import { LuCircleCheck, LuSun, LuMoon } from "react-icons/lu"
+import { SimpleGrid, Box, Center, VStack, Text, Highlight, Image, List, IconButton, Button, HStack } from '@chakra-ui/react';
+import { LuCircleCheck } from "react-icons/lu"
+import { IoIosMusicalNote } from "react-icons/io";
 import axios from 'axios'
 import ThemeChanger from '../components/ThemeChanger'
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +13,8 @@ import { login, authorize } from '../redux/authentication';
 function Landing() {
   const dispatch = useDispatch();
   const theme = useSelector(state => state.theme.theme);
+  const isSignedIn = useSelector(state => state.authentication.isSignedIn);
+  const isAuthorized = useSelector(state => state.authentication.isAuthorized);
 
   const handleAppleResponse = (response) => {
     const code = response.authorization.code;
@@ -62,48 +65,55 @@ function Landing() {
               </Text>
               <List.Root variant="plain" align="center" marginBottom="5">
                 <List.Item>
-                  <List.Indicator asChild color="green.500">
-                    <LuCircleCheck />
+                  <List.Indicator asChild color="white">
+                    <IoIosMusicalNote />
                   </List.Indicator>
                   Create a custom list of artists to keep track of
                 </List.Item>
                 <List.Item>
-                  <List.Indicator asChild color="green.500">
-                    <LuCircleCheck />
+                  <List.Indicator asChild color="white">
+                    <IoIosMusicalNote />
                   </List.Indicator>
                   Automatically generate playlists of new music
                 </List.Item>
                 <List.Item>
-                  <List.Indicator asChild color="green.500">
-                    <LuCircleCheck />
+                  <List.Indicator asChild color="white">
+                    <IoIosMusicalNote />
                   </List.Indicator>
                   MusicKit integreation for a seamless experience
                 </List.Item>
               </List.Root>
-              <AppleSignin
-                authOptions={{
-                  clientId: 'com.serviceid.unplayed-sign-in', // Service ID
-                  scope: 'email', // The scope of information you want to access
-                  redirectURI: 'https://ecb3-76-69-123-245.ngrok-free.app/', // Your OAuth Redirect URL
-                  usePopup: true, // Use popup for authentication instead of redirect
-                }}
-                onSuccess={handleAppleResponse} // Callback after successful signin
-                onError={(error) => console.error('Failed:', error)} // Callback after failed signin
-                uiType={theme == "dark" ? "light" : "dark"} // UI Type
-                style={{ borderColor: theme == "dark" ? "white" : "black" }}
-              />
-              <Button colorScheme={theme == "dark" ? "white" : "black"} onClick={async () => {
-                try {
-                  await apple_music.LogIn(); // Wait for login to complete
-                  const isLoggedIn = apple_music.isLoggedIn();
-                  console.log(isLoggedIn);
-                  dispatch(authorize(isLoggedIn));
-                } catch (error) {
-                  console.error("Login failed:", error);
-                }
-              }}>
-                Authorize Unplayed with Apple Music
-              </Button>
+              <p>Get started by completing both steps below!</p>
+              <HStack>
+                <AppleSignin
+                  authOptions={{
+                    clientId: 'com.serviceid.unplayed-sign-in', // Service ID
+                    scope: 'email', // The scope of information you want to access
+                    redirectURI: 'https://ecb3-76-69-123-245.ngrok-free.app/', // Your OAuth Redirect URL
+                    usePopup: true, // Use popup for authentication instead of redirect
+                  }}
+                  onSuccess={handleAppleResponse} // Callback after successful signin
+                  onError={(error) => console.error('Failed:', error)} // Callback after failed signin
+                  uiType={theme == "dark" ? "light" : "dark"} // UI Type
+                  style={{ borderColor: theme == "dark" ? "white" : "black" }}
+                />
+                {isSignedIn ? <LuCircleCheck style={{color: 'green'}} /> : null}
+              </HStack>
+              <HStack>
+                <Button colorScheme={theme == "dark" ? "white" : "black"} style={{backgroundColor: theme == "dark" ? "white" : "black"}} onClick={async () => {
+                  try {
+                    await apple_music.LogIn(); // Wait for login to complete
+                    const isLoggedIn = apple_music.isLoggedIn();
+                    console.log(isLoggedIn);
+                    dispatch(authorize(isLoggedIn));
+                  } catch (error) {
+                    console.error("Login failed:", error);
+                  }
+                }}>
+                  Authorize Unplayed with Apple Music
+                </Button>
+                {isAuthorized ? <LuCircleCheck style={{color: 'green'}} /> : null}
+              </HStack>
             </VStack>
           </Center>
         </Box>
