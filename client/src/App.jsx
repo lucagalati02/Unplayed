@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux'
 import { Theme } from '@chakra-ui/react';
 
 function App() {
-  const isAuthenticated = useSelector(state => state.authentication.isAuthenticated)
+  const isSignedIn = useSelector(state => state.authentication.isSignedIn)
+  const isAuthorized = useSelector(state => state.authentication.isAuthorized)
   const theme = useSelector(state => state.theme.theme)
 
   return (
@@ -14,10 +15,10 @@ function App() {
       <Router>
         <Routes>
           {/* Landing Page */}
-          <Route path='/' element={isAuthenticated ? <Navigate to="/unplayed-home" /> : <Landing />} />
+          <Route path='/' element={isAuthorized && isSignedIn ? <Navigate to="/unplayed-home" /> : <Landing />} />
 
           {/* Unplayed Page */}
-          <Route path='/unplayed-home' element={!isAuthenticated ? <Navigate to="/" /> : <Unplayed />} />
+          <Route path='/unplayed-home' element={!isAuthorized || !isSignedIn ? <Navigate to="/" /> : <Unplayed />} />
         </Routes>
       </Router>
     </Theme>

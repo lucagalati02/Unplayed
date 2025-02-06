@@ -4,8 +4,12 @@ import ThemeChanger from '../components/ThemeChanger';
 import { SlUserFollowing } from "react-icons/sl";
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
+import { logout } from '../redux/authentication';
+import { useDispatch } from 'react-redux';
+import * as apple_music from '../components/apple_music'
 
 function Unplayed() {
+  const dispatch = useDispatch();
   const gradientStyle = {
     display: "flex", // Flexbox to align icon and text
     alignItems: "center", // Center-align items vertically
@@ -37,7 +41,7 @@ function Unplayed() {
 
           {/* Following Info */}
           <Text fontSize="xl" mt={100}> {/* Added margin for spacing */}
-            You are following <b>{followedArtists}</b> artists
+            You are following 10 artists
           </Text>
 
           {/* Button to open modal for selecting artists */}
@@ -51,7 +55,10 @@ function Unplayed() {
           </Button>
 
           {/* Logout Button */}
-          <Button colorPalette="gray" mt={6} onClick={() => dispatch(logout())}>
+          <Button colorPalette="gray" mt={6} onClick={() => {
+            dispatch(logout())
+            apple_music.LogOut()
+          }}>
             Log Out {<CiLogout />}
           </Button>
         </VStack>

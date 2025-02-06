@@ -5,10 +5,37 @@ import axios from 'axios'
 import ThemeChanger from '../components/ThemeChanger'
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
+import AppleSignin from 'react-apple-signin-auth';
+import { login, authorize } from '../redux/authentication';
+
 
 function Landing() {
   const dispatch = useDispatch();
   const theme = useSelector(state => state.theme.theme);
+
+  const handleAppleResponse = (response) => {
+    const code = response.authorization.code;
+
+    if (!code) {
+      console.error('Authorization code not received:', response);
+      return;
+    }
+    
+    try {
+      axios.post('http://127.0.0.1:5000/apple-callback',
+        {
+          code: code,
+        }
+      ).then((response) => {
+        dispatch(login(response.data));
+      }).catch((error) => {
+        console.log('Inner Error sending code to backend:', error);
+      });
+    }
+    catch (error) {
+      console.log('Outer Error sending code to backend:', error);
+    }
+  };
 
   return (
     <div>
@@ -53,24 +80,30 @@ function Landing() {
                   MusicKit integreation for a seamless experience
                 </List.Item>
               </List.Root>
-
-              <Button colorScheme={theme == "dark" ? "white" : "black"} onClick={() => apple_music.LogIn()}>
-                Authorize Unplayed with Apple Music
-              </Button>
-              
-              {/* <AppleSignin
+              <AppleSignin
                 authOptions={{
-                  clientId: 'com.unplayed.unplayed-sid', // Service ID
-                  scope: 'email name', // The scope of information you want to access
-                  redirectURI: 'https://3d96-76-69-123-245.ngrok-free.app/', // Your OAuth Redirect URL
-                  state: 'state', // Any additional state
+                  clientId: 'com.serviceid.unplayed-sign-in', // Service ID
+                  scope: 'email', // The scope of information you want to access
+                  redirectURI: 'https://ecb3-76-69-123-245.ngrok-free.app/', // Your OAuth Redirect URL
                   usePopup: true, // Use popup for authentication instead of redirect
                 }}
                 onSuccess={handleAppleResponse} // Callback after successful signin
                 onError={(error) => console.error('Failed:', error)} // Callback after failed signin
                 uiType={theme == "dark" ? "light" : "dark"} // UI Type
                 style={{ borderColor: theme == "dark" ? "white" : "black" }}
-              /> */}
+              />
+              <Button colorScheme={theme == "dark" ? "white" : "black"} onClick={async () => {
+                try {
+                  await apple_music.LogIn(); // Wait for login to complete
+                  const isLoggedIn = apple_music.isLoggedIn();
+                  console.log(isLoggedIn);
+                  dispatch(authorize(isLoggedIn));
+                } catch (error) {
+                  console.error("Login failed:", error);
+                }
+              }}>
+                Authorize Unplayed with Apple Music
+              </Button>
             </VStack>
           </Center>
         </Box>
