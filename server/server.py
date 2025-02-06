@@ -47,7 +47,7 @@ def decode_apple_id_token(id_token):
 
 def user_exists(EMAIL):
     query = """
-        SELECT "EMAIL" FROM "public"."APPLE_AUTH" WHERE "EMAIL" = %s
+        SELECT "EMAIL" FROM "public"."USER" WHERE "EMAIL" = %s
     """
     params = (EMAIL,)
     result = execute_query(query, params)
@@ -126,7 +126,6 @@ def apple_callback():
     # Requesting access token
     response = requests.post(TOKEN_URL, data=payload)
     token_data = response.json()
-    print(token_data)
 
     if 'error' in token_data:
         return jsonify({'error': token_data['error']}), 400
