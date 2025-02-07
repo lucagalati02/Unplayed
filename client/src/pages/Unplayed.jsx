@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Center, Text, VStack, Highlight } from '@chakra-ui/react';
+import { Button, Center, Text, VStack, Highlight } from '@chakra-ui/react';
 import ThemeChanger from '../components/ThemeChanger';
 import { SlUserFollowing } from "react-icons/sl";
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { logout } from '../redux/authentication';
+import { setAvailableArtists, setFollowing, setUnplayed } from '../redux/music';
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
 import axios from 'axios';
 
 function Unplayed() {
   const dispatch = useDispatch();
-  const [following, setFollowing] = useState(0);
+  const following = useSelector(state => state.music.following);
+  // const [following, setFollowing] = useState(0);
   const user = useSelector(state => state.authentication.user);
 
   const gradientStyle = {
@@ -34,7 +36,7 @@ function Unplayed() {
         email: user
       }}).then((response) => {
       console.log('Get Following Response: ', response.data.following)
-      setFollowing(response.data.following)
+      dispatch(setFollowing(response.data.following))
     }).catch((error) => {
       console.log('Get Following Error: ', error)
     })
