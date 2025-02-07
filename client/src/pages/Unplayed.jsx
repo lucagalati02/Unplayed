@@ -27,9 +27,6 @@ function Unplayed() {
   };
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
     const url = 'http://localhost:5000/get_user_following'
     axios.post(url, {
       params: { 
@@ -39,6 +36,19 @@ function Unplayed() {
       dispatch(setFollowing(response.data.following))
     }).catch((error) => {
       console.log('Get Following Error: ', error)
+    })
+  }, [])
+
+  useEffect(() => {
+    const url = 'http://localhost:5000/get_library_artists'
+    axios.post(url, {
+      params: { 
+        headers: apple_music.getHeader()
+      }}).then((response) => {
+      console.log('Get library artists Response: ', response.data)
+      dispatch(setAvailableArtists(response.data))
+    }).catch((error) => {
+      console.log('Get library artists Error: ', error)
     })
   }, [])
 

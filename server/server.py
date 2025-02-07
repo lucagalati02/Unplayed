@@ -181,7 +181,7 @@ def apple_callback():
 
 
 # --------------------------------------------------------
-# ---------------- Functionality Routes ------------------
+# ------------------- Database Routes --------------------
 # --------------------------------------------------------
 @app.route('/get_user_following', methods=['GET', 'POST'])
 def get_user_following():
@@ -192,6 +192,35 @@ def get_user_following():
     result = execute_query(query, params)
 
     return jsonify({'following': result})
+
+
+
+
+
+
+
+
+
+
+# --------------------------------------------------------
+# ------------------ Apple Music Routes ------------------
+# --------------------------------------------------------
+@app.route('/get_library_artists', methods=['GET', 'POST'])
+def get_library_artists():
+    try:
+        headers = request.json.get('params').get('headers')
+        print(headers)
+        url = 'https://api.music.apple.com/v1/me/library/artists'
+
+        if not headers:
+            return jsonify({'error': 'Authorization headers are required'}), 400
+        
+        response = requests.get(url, headers=headers)
+        print(response)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        print(e)
+        return jsonify({'Error getting library artists': str(e)}), 500
 
 
 if __name__ == '__main__':
