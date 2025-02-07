@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Center, Text, VStack, Highlight } from '@chakra-ui/react';
 import ThemeChanger from '../components/ThemeChanger';
 import { SlUserFollowing } from "react-icons/sl";
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { logout } from '../redux/authentication';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
+import axios from 'axios';
 
 function Unplayed() {
   const dispatch = useDispatch();
+  const [following, setFollowing] = useState(0);
+  const user = useSelector(state => state.authentication.user);
+
   const gradientStyle = {
     display: "flex", // Flexbox to align icon and text
     alignItems: "center", // Center-align items vertically
@@ -19,6 +23,22 @@ function Unplayed() {
     padding: "12px 24px",
     gap: "8px", // Space between text and icon
   };
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    const url = 'http://localhost:5000/get_user_following'
+    axios.post(url, {
+      params: { 
+        email: user
+      }}).then((response) => {
+      console.log('Get Following Response: ', response.data.following)
+      setFollowing(response.data.following)
+    }).catch((error) => {
+      console.log('Get Following Error: ', error)
+    })
+  }, [])
 
   return (
     <div>
@@ -41,7 +61,7 @@ function Unplayed() {
 
           {/* Following Info */}
           <Text fontSize="xl" mt={100}> {/* Added margin for spacing */}
-            You are following 10 artists
+            You are following {following.length} artists
           </Text>
 
           {/* Button to open modal for selecting artists */}
@@ -50,7 +70,7 @@ function Unplayed() {
           </Button>
 
           {/* Button to generate unplayed playlist */}
-          <Button style={gradientStyle} size="lg" mt={6}>
+          <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6}>
             Generate Unplayed Playlist {<IoMusicalNotesSharp />}
           </Button>
 

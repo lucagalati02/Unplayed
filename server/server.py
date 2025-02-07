@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.debug = True # Comment out this line for production
 CORS(app)
 
-# Apple Info
+# Initialize server variables
 load_dotenv()
 TEAM_ID = os.getenv('TEAM_ID')
 KEY_ID = os.getenv('KEY_ID')
@@ -23,9 +23,23 @@ PRIVATE_KEY_PATH_SIGN_IN = os.getenv('PRIVATE_KEY_PATH_SIGN_IN')
 DATABASE_URL = os.getenv('DATABASE_URL')
 CLIENT_ID = os.getenv('CLIENT_ID')
 
+# Test Route
 @app.route('/')
 def hello_unplayed():
     return jsonify({'message': 'Hello, Unplayed!'})
+
+
+
+
+
+
+
+
+
+
+# --------------------------------------------------------
+# ------------------ Utility Functions -------------------
+# --------------------------------------------------------
 
 def decode_apple_id_token(id_token):
     # Fetch Apple's public keys
@@ -60,13 +74,25 @@ def user_exists(EMAIL):
 def add_user(EMAIL):
     try:
         query = """
-            INSERT INTO "public"."USER" ("EMAIL") VALUES (%s)
+            INSERT INTO "public"."USER" ("EMAIL", "FOLLOWING") VALUES (%s, %s)
         """
-        params = (EMAIL,)
+        params = (EMAIL, '{"following": []}')
         execute_post(query, params)
     except Exception as e:
         return jsonify({'Error adding user': str(e)}), 500
 
+
+
+
+
+
+
+
+
+
+# --------------------------------------------------------
+# ------------------- Utility Routes ---------------------
+# --------------------------------------------------------
 @app.route('/get_developer_token', methods=['GET', 'POST'])
 def get_developer_token():
     try:
@@ -144,6 +170,29 @@ def apple_callback():
         'email': USER_EMAIL,
         'verified': USER_VERIFIED,
     })
+
+
+
+
+
+
+
+
+
+
+# --------------------------------------------------------
+# ---------------- Functionality Routes ------------------
+# --------------------------------------------------------
+@app.route('/get_user_following', methods=['GET', 'POST'])
+def get_user_following():
+    query = """
+        SELECT "FOLLOWING" FROM "public"."USER" WHERE "EMAIL" = %s
+    """
+    params = (request.json.get('email'),)
+    result = execute_query(query, params)
+
+    return jsonify({'following': result})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
