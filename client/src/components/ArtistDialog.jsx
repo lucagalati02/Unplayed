@@ -1,6 +1,7 @@
 import React from 'react'
 import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "./dialog"
-import { Button, Center } from '@chakra-ui/react';
+import { CheckboxCard } from "./checkbox-card"
+import { Button, Center, VStack, Separator, Heading } from '@chakra-ui/react';
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
@@ -19,7 +20,7 @@ function ArtistDialog() {
   const availableArtists = useSelector(state => state.music.availableArtists)
 
   return (
-    <DialogRoot size="cover" placement="center" motionPreset="scale" closeOnEscape={false} closeOnInteractOutside={false}>
+    <DialogRoot size="cover" placement="center" motionPreset="scale" closeOnEscape={false} closeOnInteractOutside={false} scrollBehavior={'inside'}>
       <DialogTrigger asChild>
         <Button style={gradientStyle} size="lg" mt={6}>
           Following {<SlUserFollowing />}
@@ -29,15 +30,23 @@ function ArtistDialog() {
         <DialogHeader>
           <DialogTitle>
             <Center>
-              Follow Artists
+              <Heading size="5xl">
+                Follow Artists
+              </Heading>
             </Center>
           </DialogTitle>
           <DialogCloseTrigger />
         </DialogHeader>
         <DialogBody>
-          <Center height="25vh">
-            
-          </Center>
+          <VStack spacing={4} w="100%">
+            {availableArtists.map(artist => (
+              <Center key={artist.id} w="100%">
+                <button style={{ width: '35%' }} onClick={() => window.alert(`Following ${artist.attributes.name}`)}>
+                  <CheckboxCard label={artist.attributes.name} variant='surface' size='lg' w="100%"/>
+                </button>
+              </Center>
+            ))}
+          </VStack>
         </DialogBody>
       </DialogContent>
     </DialogRoot>
