@@ -250,38 +250,12 @@ def get_library_artists():
             response.append(artists.get('data'))
             if artists.get('next'):
                 artists = requests.get(f"{base_url}{artists.get('next')}", headers=headers).json()
-                print(artists)
             else:
                 break
 
         return jsonify({ 'data': response }), 200
     except Exception as e:
         return jsonify({'Error getting library artists': str(e)}), 500
-
-
-
-
-
-
-
-    # final_response = []
-    # try:
-    #     # Get the user's storefront
-    #     storefront = get_user_storefront()
-
-    #     # Get all artists in the user's library
-    #     headers = request.json.get('params').get('headers')
-    #     url = 'https://api.music.apple.com/v1/me/library/artists'
-    #     if not headers:
-    #         return jsonify({'error': 'Authorization headers are required'}), 400
-    #     response = requests.get(url, headers=headers)
-    #     final_response.append(response.json().get('data'))
-
-
-    #     return jsonify(response.json()), response.status_code
-    # except Exception as e:
-    #     print(e)
-    #     return jsonify({'Error getting library artists': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
