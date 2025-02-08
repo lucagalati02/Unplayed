@@ -1,6 +1,6 @@
 import React from 'react'
 import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "./dialog"
-import { Button } from '@chakra-ui/react';
+import { Button, Center } from '@chakra-ui/react';
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
@@ -27,11 +27,17 @@ function ArtistDialog() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Follow Artists</DialogTitle>
+          <DialogTitle>
+            <Center>
+              Follow Artists
+            </Center>
+          </DialogTitle>
           <DialogCloseTrigger />
         </DialogHeader>
         <DialogBody>
-          This is where the list of artists goes
+          <Center height="25vh">
+            
+          </Center>
         </DialogBody>
       </DialogContent>
     </DialogRoot>

@@ -13,7 +13,6 @@ import ArtistDialog from '../components/ArtistDialog';
 function Unplayed() {
   const dispatch = useDispatch();
   const following = useSelector(state => state.music.following);
-  // const [following, setFollowing] = useState(0);
   const user = useSelector(state => state.authentication.user);
 
   const gradientStyle = {
