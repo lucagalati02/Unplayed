@@ -19,7 +19,7 @@ function ArtistDialog() {
   const availableArtists = useSelector(state => state.music.availableArtists)
 
   return (
-    <DialogRoot size="cover" placement="center" motionPreset="scale">
+    <DialogRoot size="cover" placement="center" motionPreset="scale" closeOnEscape={false} closeOnInteractOutside={false}>
       <DialogTrigger asChild>
         <Button style={gradientStyle} size="lg" mt={6}>
           Following {<SlUserFollowing />}
@@ -27,7 +27,7 @@ function ArtistDialog() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Set a Following List</DialogTitle>
+          <DialogTitle>Follow Artists</DialogTitle>
           <DialogCloseTrigger />
         </DialogHeader>
         <DialogBody>
