@@ -247,7 +247,9 @@ def get_library_artists():
         artists = requests.get(url, headers=headers).json()
 
         while True:
-            response.append(artists.get('data'))
+            for artist in artists.get('data'):
+                response.append(artist)
+
             if artists.get('next'):
                 artists = requests.get(f"{base_url}{artists.get('next')}", headers=headers).json()
             else:

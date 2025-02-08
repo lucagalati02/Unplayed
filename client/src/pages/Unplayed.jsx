@@ -46,7 +46,7 @@ function Unplayed() {
         headers: apple_music.getHeader()
       }}).then((response) => {
       console.log('Get library artists Response: ', response.data)
-      dispatch(setAvailableArtists(response.data))
+      dispatch(setAvailableArtists(response.data.data))
     }).catch((error) => {
       console.log('Get library artists Error: ', error)
     })
