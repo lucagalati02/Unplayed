@@ -39,13 +39,19 @@ function ArtistDialog() {
         </DialogHeader>
         <DialogBody>
           <VStack spacing={4} w="100%">
-            {availableArtists.map(artist => (
-              <Center key={artist.id} w="100%">
-                <button style={{ width: '35%' }} onClick={() => window.alert(`Following ${artist.attributes.name}`)}>
-                  <CheckboxCard label={artist.attributes.name} variant='surface' size='lg' w="100%"/>
-                </button>
+            {availableArtists ? (
+              availableArtists.map(artist => (
+                <Center key={artist.id} w="100%">
+                  <button style={{ width: '35%' }} onClick={() => window.alert(`Following ${artist.attributes.name}`)}>
+                    <CheckboxCard label={artist.attributes.name} variant='surface' size='lg' w="100%"/>
+                  </button>
+                </Center>
+              ))
+            ) : (
+              <Center w="100%">
+                <Heading size="md">Fetching Artists...</Heading>
               </Center>
-            ))}
+            )}
           </VStack>
         </DialogBody>
       </DialogContent>
