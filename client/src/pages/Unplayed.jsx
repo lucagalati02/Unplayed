@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Center, Text, VStack, Highlight } from '@chakra-ui/react';
 import ThemeChanger from '../components/ThemeChanger';
-import { SlUserFollowing } from "react-icons/sl";
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { logout } from '../redux/authentication';
@@ -9,6 +8,7 @@ import { setAvailableArtists, setFollowing, setUnplayed } from '../redux/music';
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
 import axios from 'axios';
+import ArtistDialog from '../components/ArtistDialog';
 
 function Unplayed() {
   const dispatch = useDispatch();
@@ -76,10 +76,8 @@ function Unplayed() {
             You are following {following.length} artists
           </Text>
 
-          {/* Button to open modal for selecting artists */}
-          <Button style={gradientStyle} size="lg" mt={6}>
-            Following {<SlUserFollowing />}
-          </Button>
+          {/* Dialog for selecting artists */}
+          <ArtistDialog />
 
           {/* Button to generate unplayed playlist */}
           <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6}>
