@@ -17,8 +17,14 @@ export const musicSlice = createSlice({
         setUnplayed: (state, action) => {
             state.unplayed = action.payload;
         },
+        toggleArtistClick: (state, action) => {
+            const artist = state.availableArtists.find(artist => artist.id == action.payload);
+            if (artist) {
+                artist.clicked = !artist.clicked;
+            }
+        }
     }
 })
 
-export const { setAvailableArtists, setFollowing, setUnplayed } = musicSlice.actions;
+export const { setAvailableArtists, setFollowing, setUnplayed, toggleArtistClick } = musicSlice.actions;
 export default musicSlice.reducer;

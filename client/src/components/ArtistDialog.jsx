@@ -6,6 +6,7 @@ import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
 import axios from 'axios';
+import { toggleArtistClick } from '../redux/music';
 
 function ArtistDialog() {
   const gradientStyle = {
@@ -18,6 +19,7 @@ function ArtistDialog() {
     gap: "8px", // Space between text and icon
   };
   const availableArtists = useSelector(state => state.music.availableArtists)
+  const dispatch = useDispatch()
 
   return (
     <DialogRoot size="cover" placement="center" motionPreset="scale" closeOnEscape={false} closeOnInteractOutside={false} scrollBehavior={'inside'}>
@@ -42,7 +44,7 @@ function ArtistDialog() {
             {availableArtists ? (
               availableArtists.map(artist => (
                 <Center key={artist.id} w="100%">
-                  <button style={{ width: '35%' }} onClick={() => window.alert(`Following ${artist.attributes.name}`)}>
+                  <button style={{ width: '35%', cursor: 'pointer' }} onClick={() => {dispatch(toggleArtistClick(artist.id))}}>
                     <CheckboxCard label={artist.attributes.name} variant='surface' size='lg' w="100%"/>
                   </button>
                 </Center>
