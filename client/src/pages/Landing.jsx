@@ -89,7 +89,7 @@ function Landing() {
                   authOptions={{
                     clientId: 'com.serviceid.unplayed-sign-in', // Service ID
                     scope: 'email', // The scope of information you want to access
-                    redirectURI: 'https://ecb3-76-69-123-245.ngrok-free.app/', // Your OAuth Redirect URL
+                    redirectURI: 'https://53ba-76-69-123-245.ngrok-free.app/', // Your OAuth Redirect URL
                     usePopup: true, // Use popup for authentication instead of redirect
                   }}
                   onSuccess={handleAppleResponse} // Callback after successful signin

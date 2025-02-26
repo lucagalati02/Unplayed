@@ -14,6 +14,7 @@ function Unplayed() {
   const dispatch = useDispatch();
   const following = useSelector(state => state.music.following);
   const user = useSelector(state => state.authentication.user);
+  
 
   const gradientStyle = {
     display: "flex", // Flexbox to align icon and text
