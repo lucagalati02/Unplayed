@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
 import axios from 'axios';
 import { toggleArtistClick } from '../redux/music';
+import { Skeleton } from "../components/skeleton"
 
 function ArtistDialog() {
   const gradientStyle = {
@@ -51,7 +52,18 @@ function ArtistDialog() {
               ))
             ) : (
               <Center w="100%">
-                <Heading size="md">Fetching Artists...</Heading>
+                <VStack w="100%">
+                  <Heading size="md">Fetching Artists...</Heading>
+                  <Skeleton 
+                    variant="shine"
+                    width="full"
+                    height="4"
+                    css={{
+                      "--start-color": "#FB5C74",
+                      "--end-color": "#FA233B",
+                    }}
+                  />
+                </VStack>
               </Center>
             )}
           </VStack>
