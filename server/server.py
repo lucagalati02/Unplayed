@@ -235,6 +235,7 @@ def get_library_artists():
     response = []
     base_url = 'https://api.music.apple.com'
     url = f'{base_url}/v1/me/library/artists'
+    counter = 0
 
     try:
         # Get the user's storefront
@@ -245,11 +246,16 @@ def get_library_artists():
         if not headers:
             return jsonify({'error': 'Authorization headers are required'}), 400
         artists = requests.get(url, headers=headers).json()
+        
 
         while True:
             for artist in artists.get('data'):
-                temp_artist = artist.copy()
-                temp_artist['clicked'] = False
+                counter += 1
+                temp_artist = {
+                    'id': counter,
+                    'name': artist.get('attributes').get('name'),
+                    'clicked': False
+                }
                 response.append(temp_artist)
 
             if artists.get('next'):
