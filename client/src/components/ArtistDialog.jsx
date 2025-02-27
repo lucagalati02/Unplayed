@@ -41,7 +41,7 @@ function ArtistDialog() {
           <DialogCloseTrigger />
         </DialogHeader>
         <DialogBody>
-          <VStack spacing={4} w="100%">
+          {/* <VStack spacing={4} w="100%">
             {availableArtists ? (
               availableArtists.map(artist => (
                 <Center key={artist.id} w="100%">
@@ -66,7 +66,7 @@ function ArtistDialog() {
                 </VStack>
               </Center>
             )}
-          </VStack>
+          </VStack> */}
         </DialogBody>
       </DialogContent>
     </DialogRoot>
