@@ -54,24 +54,26 @@ function ArtistDialog() {
                         }}
               />
               :
-              <Table.Root size="md">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.Cell>Artist</Table.Cell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {
-                    availableArtists.map((artist, index) => (
-                      <Table.Row key={index}>
-                        <Table.Cell>
-                          {artist.name}
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  }
-                </Table.Body>
-              </Table.Root>
+              <Table.ScrollArea borderWidth="1px" rounded="md" height="95%">
+                <Table.Root size="lg" stickyHeader interactive>
+                  <Table.Header>
+                    <Table.Row bg="bg.subtle">
+                      <Table.ColumnHeader>Artist</Table.ColumnHeader>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {
+                      availableArtists.map((artist, index) => (
+                        <Table.Row key={index}>
+                          <Table.Cell>
+                            {artist.name}
+                          </Table.Cell>
+                        </Table.Row>
+                      ))
+                    }
+                  </Table.Body>
+                </Table.Root>
+              </Table.ScrollArea>
 
           }
         </DialogBody>
