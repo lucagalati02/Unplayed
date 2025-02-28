@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "./dialog"
 import { Button, Center, Heading } from '@chakra-ui/react';
 import { SlUserFollowing } from "react-icons/sl";
@@ -23,6 +23,7 @@ function ArtistDialog() {
   };
   const availableArtists = useSelector(state => state.music.availableArtists)
   const dispatch = useDispatch()
+  const previousSelectionRef = useRef([]);
 
   const columns = [
     { field: 'name', headerName: 'Artist', flex: 1, headerAlign: 'center' },
@@ -68,14 +69,34 @@ function ArtistDialog() {
                   columns={columns}
                   pagination
                   initialState={{ pagination: { paginationModel } }}
-                  sx={{ border: 0, "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
-                    display: "none"
-                  }}}
-                  onRowClick={(params) => {
-                    dispatch(toggleArtistClick(params.row.id))
+                  sx={{ 
+                    border: 0, 
+                    "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
+                      display: "none"
+                    }
                   }}
+                  // onRowClick={(params) => {
+                  //   dispatch(toggleArtistClick(params.row.id));
+                  // }}
                   checkboxSelection
-                  checkboxSelectionVisible={false}
+                  onRowSelectionModelChange={(newSelectionModel) => {
+                    const previousSelection = previousSelectionRef.current;
+                    // Find the ID that was added or removed by comparing old and new selections
+                    const added = newSelectionModel.filter(id => !previousSelection.includes(id));
+                    const removed = previousSelection.filter(id => !newSelectionModel.includes(id));
+            
+                    // If an ID was added (checkbox checked)
+                    if (added.length > 0) {
+                      dispatch(toggleArtistClick(added[0]));
+                    }
+                    // If an ID was removed (checkbox unchecked)
+                    else if (removed.length > 0) {
+                      dispatch(toggleArtistClick(removed[0]));
+                    }
+            
+                    // Update the ref with the new selection
+                    previousSelectionRef.current = newSelectionModel;
+                  }}
                 />
               </Paper>
           }
