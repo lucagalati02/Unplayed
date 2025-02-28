@@ -18,10 +18,7 @@ export const musicSlice = createSlice({
             state.unplayed = action.payload;
         },
         toggleArtistClick: (state, action) => {
-            const artist = state.availableArtists.find(artist => artist.id == action.payload);
-            if (artist) {
-                artist.clicked = !artist.clicked;
-            }
+            state.availableArtists[action.payload - 1].clicked = !state.availableArtists[action.payload - 1].clicked;
         }
     }
 })

@@ -1,7 +1,7 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "./dialog"
-import { CheckboxCard } from "./checkbox-card"
-import { Button, Center, VStack, Separator, Heading } from '@chakra-ui/react';
+import { Button, Center, Heading } from '@chakra-ui/react';
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "@chakra-ui/react"
@@ -9,6 +9,7 @@ import * as apple_music from '../components/apple_music'
 import axios from 'axios';
 import { toggleArtistClick } from '../redux/music';
 import { Skeleton } from "../components/skeleton"
+import {Checkbox} from "./checkbox"
 
 function ArtistDialog() {
   const gradientStyle = {
@@ -21,6 +22,7 @@ function ArtistDialog() {
     gap: "8px", // Space between text and icon
   };
   const availableArtists = useSelector(state => state.music.availableArtists)
+  const [selection, setSelection] = useState([])
   const dispatch = useDispatch()
 
   return (
@@ -52,13 +54,15 @@ function ArtistDialog() {
                           "--start-color": "#FB5C74",
                           "--end-color": "#FA233B",
                         }}
-              />
+              >
+              </Skeleton>
               :
               <Table.ScrollArea borderWidth="1px" rounded="md" height="95%">
                 <Table.Root size="lg" stickyHeader interactive>
                   <Table.Header>
                     <Table.Row bg="bg.subtle">
                       <Table.ColumnHeader>Artist</Table.ColumnHeader>
+                      <Table.ColumnHeader>Following</Table.ColumnHeader>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -67,6 +71,9 @@ function ArtistDialog() {
                         <Table.Row key={index}>
                           <Table.Cell>
                             {artist.name}
+                          </Table.Cell>
+                          <Table.Cell>
+                            <Checkbox checked={artist.clicked} onCheckedChange={(prev) => dispatch(toggleArtistClick(artist.id)) } />
                           </Table.Cell>
                         </Table.Row>
                       ))
