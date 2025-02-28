@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -38,7 +38,7 @@ function ArtistDialog() {
     { field: "name", headerName: "Artist", flex: 1, headerAlign: "center" },
   ];
 
-  const paginationModel = { page: 0, pageSize: 25 };
+  const paginationModel = { page: 0, pageSize: 50 };
 
   // Compute the initial rowSelectionModel based on clicked attribute
   const selectedIds = useMemo(() => {
