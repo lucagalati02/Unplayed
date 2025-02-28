@@ -10,7 +10,7 @@ import {
   DialogRoot,
   DialogTrigger,
 } from "./dialog";
-import { Button, Center, Heading } from "@chakra-ui/react";
+import { Button, Center, Heading, HStack } from "@chakra-ui/react";
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import * as apple_music from "../components/apple_music";
@@ -83,39 +83,52 @@ function ArtistDialog() {
               }}
             />
           ) : (
-            <Paper sx={{ height: "100%", width: "100%" }}>
-              <DataGrid
-                rows={availableArtists}
-                columns={columns}
-                pagination
-                initialState={{ pagination: { paginationModel } }}
-                sx={{
-                  border: 0,
-                  "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
-                    display: "none",
-                  },
-                }}
-                checkboxSelection
-                rowSelectionModel={selectedIds} // Controlled selection
-                onRowSelectionModelChange={(newSelectionModel) => {
-                  const previousSelection = previousSelectionRef.current;
-                  const added = newSelectionModel.filter(
-                    (id) => !previousSelection.includes(id)
-                  );
-                  const removed = previousSelection.filter(
-                    (id) => !newSelectionModel.includes(id)
-                  );
+            <>
+              <Paper sx={{ height: "90%", width: "100%", overflow: "hidden" }}>
+                <DataGrid
+                  rows={availableArtists}
+                  columns={columns}
+                  pagination
+                  initialState={{ pagination: { paginationModel } }}
+                  sx={{
+                    border: 0,
+                    "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
+                      display: "none",
+                    },
+                  }}
+                  checkboxSelection
+                  rowSelectionModel={selectedIds} // Controlled selection
+                  onRowSelectionModelChange={(newSelectionModel) => {
+                    const previousSelection = previousSelectionRef.current;
+                    const added = newSelectionModel.filter(
+                      (id) => !previousSelection.includes(id)
+                    );
+                    const removed = previousSelection.filter(
+                      (id) => !newSelectionModel.includes(id)
+                    );
 
-                  if (added.length > 0) {
-                    dispatch(toggleArtistClick(added[0]));
-                  } else if (removed.length > 0) {
-                    dispatch(toggleArtistClick(removed[0]));
-                  }
+                    if (added.length > 0) {
+                      dispatch(toggleArtistClick(added[0]));
+                    } else if (removed.length > 0) {
+                      dispatch(toggleArtistClick(removed[0]));
+                    }
 
-                  previousSelectionRef.current = newSelectionModel;
-                }}
-              />
-            </Paper>
+                    previousSelectionRef.current = newSelectionModel;
+                  }}
+                />
+              </Paper>
+              <HStack mt='5' justify="center">
+                <Button onClick={() => console.log("Select All")} m='1'>
+                  Select All
+                </Button>
+                <Button onClick={() => console.log("Clear Selections")} m='1'>
+                  Clear Selections
+                </Button>
+                <Button onClick={() => console.log("Save Selections")} m='1'>
+                  Save Selections
+                </Button>
+              </HStack>
+            </>
           )}
         </DialogBody>
       </DialogContent>
