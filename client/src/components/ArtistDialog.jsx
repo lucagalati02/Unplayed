@@ -4,6 +4,7 @@ import { CheckboxCard } from "./checkbox-card"
 import { Button, Center, VStack, Separator, Heading } from '@chakra-ui/react';
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from 'react-redux';
+import { Table } from "@chakra-ui/react"
 import * as apple_music from '../components/apple_music'
 import axios from 'axios';
 import { toggleArtistClick } from '../redux/music';
@@ -41,32 +42,38 @@ function ArtistDialog() {
           <DialogCloseTrigger />
         </DialogHeader>
         <DialogBody>
-          {/* <VStack spacing={4} w="100%">
-            {availableArtists ? (
-              availableArtists.map(artist => (
-                <Center key={artist.id} w="100%">
-                  <button style={{ width: '35%', cursor: 'pointer' }} onClick={() => {dispatch(toggleArtistClick(artist.id))}}>
-                    <CheckboxCard label={artist.attributes.name} variant='surface' size='lg' w="100%"/>
-                  </button>
-                </Center>
-              ))
-            ) : (
-              <Center w="100%">
-                <VStack w="100%">
-                  <Heading size="md">Fetching Artists...</Heading>
-                  <Skeleton 
-                    variant="shine"
-                    width="full"
-                    height="4"
-                    css={{
-                      "--start-color": "#FB5C74",
-                      "--end-color": "#FA233B",
-                    }}
-                  />
-                </VStack>
-              </Center>
-            )}
-          </VStack> */}
+          {
+            availableArtists == null ?
+              <Skeleton 
+                variant="shine"
+                        width="full"
+                        height="4"
+                        css={{
+                          "--start-color": "#FB5C74",
+                          "--end-color": "#FA233B",
+                        }}
+              />
+              :
+              <Table.Root size="md">
+                <Table.Header>
+                  <Table.Row>
+                    <Table.Cell>Artist</Table.Cell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {
+                    availableArtists.map((artist, index) => (
+                      <Table.Row key={index}>
+                        <Table.Cell>
+                          {artist.name}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
+                  }
+                </Table.Body>
+              </Table.Root>
+
+          }
         </DialogBody>
       </DialogContent>
     </DialogRoot>
