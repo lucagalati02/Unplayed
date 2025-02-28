@@ -31,7 +31,7 @@ function ArtistDialog() {
   const paginationModel = { page: 0, pageSize: 25 };
 
   return (
-    <DialogRoot size="cover" placement="center" motionPreset="scale" closeOnEscape={false} closeOnInteractOutside={false} scrollBehavior={'inside'}>
+    <DialogRoot size="cover" placement="center" motionPreset="scale" closeOnEscape={false} closeOnInteractOutside={false} scrollBehavior={'inside'}  >
       <DialogTrigger asChild>
         <Button style={gradientStyle} size="lg" mt={6}>
           Following {<SlUserFollowing />}
@@ -68,8 +68,14 @@ function ArtistDialog() {
                   columns={columns}
                   pagination
                   initialState={{ pagination: { paginationModel } }}
+                  sx={{ border: 0, "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
+                    display: "none"
+                  }}}
+                  onRowClick={(params) => {
+                    dispatch(toggleArtistClick(params.row.id))
+                  }}
                   checkboxSelection
-                  sx={{ border: 0, }}
+                  checkboxSelectionVisible={false}
                 />
               </Paper>
           }

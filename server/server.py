@@ -254,6 +254,7 @@ def get_library_artists():
                 temp_artist = {
                     'id': counter,
                     'name': artist.get('attributes').get('name'),
+                    'clicked': False
                 }
                 response.append(temp_artist)
 
