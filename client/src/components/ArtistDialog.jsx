@@ -4,7 +4,6 @@ import {
   DialogBody,
   DialogCloseTrigger,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogRoot,
@@ -52,6 +51,28 @@ function ArtistDialog() {
   useEffect(() => {
     previousSelectionRef.current = selectedIds;
   }, [selectedIds]);
+
+  // Handler for Select All button
+  const handleSelectAll = () => {
+    if (tempAvailableArtists) {
+      tempAvailableArtists.forEach((artist) => {
+        if (!artist.clicked) {
+          dispatch(toggleArtistClick(artist.id));
+        }
+      });
+    }
+  };
+
+  // Handler for Clear Selections button
+  const handleClearSelections = () => {
+    if (tempAvailableArtists) {
+      tempAvailableArtists.forEach((artist) => {
+        if (artist.clicked) {
+          dispatch(toggleArtistClick(artist.id));
+        }
+      });
+    }
+  };
 
   return (
     <DialogRoot
@@ -127,6 +148,12 @@ function ArtistDialog() {
                 />
               </Paper>
               <HStack mt="5" justify="center">
+                <Button onClick={handleClearSelections} m="3">
+                  Clear Selections
+                </Button>
+                <Button onClick={handleSelectAll} m="3">
+                  Select All
+                </Button>
                 <Button onClick={() => dispatch(toggleSaveSelections())} m="3">
                   Save Selections
                 </Button>
