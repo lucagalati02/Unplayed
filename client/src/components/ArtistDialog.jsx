@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useEffect } from "react";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -13,8 +13,6 @@ import {
 import { Button, Center, Heading, HStack } from "@chakra-ui/react";
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
-import * as apple_music from "../components/apple_music";
-import axios from "axios";
 import { toggleArtistClick, toggleSaveSelections, toggleExit } from "../redux/music";
 import { Skeleton } from "../components/skeleton";
 import { DataGrid } from "@mui/x-data-grid";
@@ -30,6 +28,7 @@ function ArtistDialog() {
     padding: "12px 24px",
     gap: "8px",
   };
+
   const availableArtists = useSelector((state) => state.music.availableArtists);
   const tempAvailableArtists = useSelector((state) => state.music.tempAvailableArtists);
   const dispatch = useDispatch();
@@ -48,6 +47,11 @@ function ArtistDialog() {
       .filter((artist) => artist.clicked)
       .map((artist) => artist.id);
   }, [tempAvailableArtists]);
+
+  // Sync previousSelectionRef with current selectedIds whenever they change
+  useEffect(() => {
+    previousSelectionRef.current = selectedIds;
+  }, [selectedIds]);
 
   return (
     <DialogRoot
@@ -122,8 +126,8 @@ function ArtistDialog() {
                   }}
                 />
               </Paper>
-              <HStack mt='5' justify="center">
-                <Button onClick={() => dispatch(toggleSaveSelections())} m='3'>
+              <HStack mt="5" justify="center">
+                <Button onClick={() => dispatch(toggleSaveSelections())} m="3">
                   Save Selections
                 </Button>
               </HStack>

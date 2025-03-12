@@ -31,5 +31,5 @@ export const musicSlice = createSlice({
     }
 })
 
-export const { setAvailableArtists, setFollowing, setUnplayed, toggleArtistClick, toggleSelectAll, toggleExit } = musicSlice.actions;
+export const { setAvailableArtists, setFollowing, setUnplayed, toggleArtistClick, toggleSaveSelections, toggleExit } = musicSlice.actions;
 export default musicSlice.reducer;
