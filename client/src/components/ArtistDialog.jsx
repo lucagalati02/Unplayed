@@ -16,6 +16,7 @@ import { toggleArtistClick, toggleSaveSelections, toggleExit } from "../redux/mu
 import { Skeleton } from "../components/skeleton";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
+import { Toaster, toaster } from "./toaster";
 
 function ArtistDialog() {
   const gradientStyle = {
@@ -146,6 +147,7 @@ function ArtistDialog() {
                     previousSelectionRef.current = newSelectionModel;
                   }}
                 />
+                <Toaster />
               </Paper>
               <HStack mt="5" justify="center">
                 <Button onClick={handleClearSelections} m="3">
@@ -154,7 +156,13 @@ function ArtistDialog() {
                 <Button onClick={handleSelectAll} m="3">
                   Select All
                 </Button>
-                <Button onClick={() => dispatch(toggleSaveSelections())} m="3">
+                <Button onClick={() => {
+                  dispatch(toggleSaveSelections());
+                  toaster.create({
+                    title: 'Successfully Saved Artists',
+                    type: "success",
+                  });
+                }} m="3">
                   Save Selections
                 </Button>
               </HStack>
