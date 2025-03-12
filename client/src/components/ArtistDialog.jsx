@@ -15,7 +15,7 @@ import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import * as apple_music from "../components/apple_music";
 import axios from "axios";
-import { toggleArtistClick } from "../redux/music";
+import { toggleArtistClick, toggleSaveSelections, toggleExit } from "../redux/music";
 import { Skeleton } from "../components/skeleton";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
@@ -31,6 +31,7 @@ function ArtistDialog() {
     gap: "8px",
   };
   const availableArtists = useSelector((state) => state.music.availableArtists);
+  const tempAvailableArtists = useSelector((state) => state.music.tempAvailableArtists);
   const dispatch = useDispatch();
   const previousSelectionRef = useRef([]);
 
@@ -38,15 +39,15 @@ function ArtistDialog() {
     { field: "name", headerName: "Artist", flex: 1, headerAlign: "center" },
   ];
 
-  const paginationModel = { page: 0, pageSize: 50 };
+  const paginationModel = { page: 0, pageSize: 100 };
 
   // Compute the initial rowSelectionModel based on clicked attribute
   const selectedIds = useMemo(() => {
-    if (!availableArtists) return [];
-    return availableArtists
+    if (!tempAvailableArtists) return [];
+    return tempAvailableArtists
       .filter((artist) => artist.clicked)
       .map((artist) => artist.id);
-  }, [availableArtists]);
+  }, [tempAvailableArtists]);
 
   return (
     <DialogRoot
@@ -56,6 +57,7 @@ function ArtistDialog() {
       closeOnEscape={false}
       closeOnInteractOutside={false}
       scrollBehavior={"inside"}
+      onExitComplete={() => dispatch(toggleExit())}
     >
       <DialogTrigger asChild>
         <Button style={gradientStyle} size="lg" mt={6}>
@@ -72,21 +74,24 @@ function ArtistDialog() {
           <DialogCloseTrigger />
         </DialogHeader>
         <DialogBody>
-          {availableArtists == null ? (
-            <Skeleton
-              variant="shine"
-              width="full"
-              height="4"
-              css={{
-                "--start-color": "#FB5C74",
-                "--end-color": "#FA233B",
-              }}
-            />
+          {tempAvailableArtists == null ? (
+            <>
+              <p>Retrieving Artists...</p>
+              <Skeleton
+                variant="shine"
+                width="full"
+                height="4"
+                css={{
+                  "--start-color": "#FB5C74",
+                  "--end-color": "#FA233B",
+                }}
+              />
+            </>
           ) : (
             <>
               <Paper sx={{ height: "90%", width: "100%", overflow: "hidden" }}>
                 <DataGrid
-                  rows={availableArtists}
+                  rows={tempAvailableArtists}
                   columns={columns}
                   pagination
                   initialState={{ pagination: { paginationModel } }}
@@ -118,13 +123,7 @@ function ArtistDialog() {
                 />
               </Paper>
               <HStack mt='5' justify="center">
-                <Button onClick={() => console.log("Select All")} m='1'>
-                  Select All
-                </Button>
-                <Button onClick={() => console.log("Clear Selections")} m='1'>
-                  Clear Selections
-                </Button>
-                <Button onClick={() => console.log("Save Selections")} m='1'>
+                <Button onClick={() => dispatch(toggleSaveSelections())} m='3'>
                   Save Selections
                 </Button>
               </HStack>
