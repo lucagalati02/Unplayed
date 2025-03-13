@@ -14,6 +14,8 @@ function Unplayed() {
   const dispatch = useDispatch();
   const following = useSelector(state => state.music.following);
   const user = useSelector(state => state.authentication.user);
+  const availableArtists = useSelector(state => state.music.availableArtists);
+  const tempAvailableArtists = useSelector(state => state.music.tempAvailableArtists);
   
 
   const gradientStyle = {
@@ -35,7 +37,7 @@ function Unplayed() {
     }).catch((error) => {
       console.log('Get Following Error: ', error)
     })
-  }, [])
+  }, [availableArtists])
 
   useEffect(() => {
     const url = 'http://localhost:5000/get_library_artists'
@@ -43,12 +45,12 @@ function Unplayed() {
       params: { 
         headers: apple_music.getHeader()
       }}).then((response) => {
-      console.log('Get library artists Response: ', response.data)
+      const data = response.data.data
       dispatch(setAvailableArtists(response.data.data))
     }).catch((error) => {
       console.log('Get library artists Error: ', error)
     })
-  }, [])
+  }, [availableArtists])
 
   return (
     <div>

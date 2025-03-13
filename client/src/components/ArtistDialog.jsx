@@ -79,7 +79,7 @@ function ArtistDialog() {
 
   const saveToDatabase = () => {
     const url = 'http://localhost:5000/save_selected_artists'
-    const selectedArtists = availableArtists
+    const selectedArtists = tempAvailableArtists
       .filter((artist) => artist.clicked)
       .map((artist) => artist.name);
     try {
