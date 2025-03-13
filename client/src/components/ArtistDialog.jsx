@@ -12,7 +12,7 @@ import {
 import { Button, Center, Heading, HStack } from "@chakra-ui/react";
 import { SlUserFollowing } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleArtistClick, toggleSaveSelections, toggleExit } from "../redux/music";
+import { toggleArtistClick, toggleSaveSelections, toggleExit, toggleRefresh } from "../redux/music";
 import { Skeleton } from "../components/skeleton";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
@@ -102,7 +102,10 @@ function ArtistDialog() {
       closeOnEscape={false}
       closeOnInteractOutside={false}
       scrollBehavior={"inside"}
-      onExitComplete={() => dispatch(toggleExit())}
+      onExitComplete={() => {
+        dispatch(toggleExit());
+        dispatch(toggleRefresh());
+      }}
     >
       <DialogTrigger asChild>
         <Button style={gradientStyle} size="lg" mt={6}>

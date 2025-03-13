@@ -7,6 +7,7 @@ export const musicSlice = createSlice({
         tempAvailableArtists: null,
         following: {'following': []},
         unplayed: null,
+        refresh: false,
     },
     reducers: {
         setAvailableArtists: (state, action) => {
@@ -27,9 +28,12 @@ export const musicSlice = createSlice({
         },
         toggleExit: (state, action) => {
             state.tempAvailableArtists = state.availableArtists;
+        },
+        toggleRefresh (state, action) {
+            state.refresh = !state.refresh;
         }
     }
 })
 
-export const { setAvailableArtists, setFollowing, setUnplayed, toggleArtistClick, toggleSaveSelections, toggleExit } = musicSlice.actions;
+export const { setAvailableArtists, setFollowing, setUnplayed, toggleArtistClick, toggleSaveSelections, toggleExit, toggleRefresh } = musicSlice.actions;
 export default musicSlice.reducer;

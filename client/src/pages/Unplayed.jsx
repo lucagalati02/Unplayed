@@ -14,8 +14,7 @@ function Unplayed() {
   const dispatch = useDispatch();
   const following = useSelector(state => state.music.following);
   const user = useSelector(state => state.authentication.user);
-  const availableArtists = useSelector(state => state.music.availableArtists);
-  const tempAvailableArtists = useSelector(state => state.music.tempAvailableArtists);
+  const refresh = useSelector(state => state.music.refresh);
   
 
   const gradientStyle = {
@@ -37,7 +36,7 @@ function Unplayed() {
     }).catch((error) => {
       console.log('Get Following Error: ', error)
     })
-  }, [availableArtists])
+  }, [refresh])
 
   useEffect(() => {
     const url = 'http://localhost:5000/get_library_artists'
@@ -50,7 +49,7 @@ function Unplayed() {
     }).catch((error) => {
       console.log('Get library artists Error: ', error)
     })
-  }, [availableArtists])
+  }, [refresh])
 
   return (
     <div>
