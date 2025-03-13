@@ -192,7 +192,7 @@ def get_user_following():
     params = (request.json.get('email'),)
     result = execute_query(query, params)
 
-    return jsonify({'following': result})
+    return result[0]
 
 @app.route('/save_selected_artists', methods=['POST'])
 def save_selected_artists():

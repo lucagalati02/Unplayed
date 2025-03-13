@@ -29,11 +29,9 @@ function Unplayed() {
   useEffect(() => {
     const url = 'http://localhost:5000/get_user_following'
     axios.post(url, {
-      params: { 
-        email: user
-      }}).then((response) => {
-      console.log('Get Following Response: ', response.data.following)
-      dispatch(setFollowing(response.data.following))
+      email: user
+      }).then((response) => {
+      dispatch(setFollowing(response.data.FOLLOWING.following))
     }).catch((error) => {
       console.log('Get Following Error: ', error)
     })
