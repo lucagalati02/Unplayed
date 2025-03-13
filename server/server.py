@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from jwt import PyJWKClient
 import time
 import requests
+import json
 
 app = Flask(__name__)
 app.debug = True # Comment out this line for production
@@ -193,6 +194,31 @@ def get_user_following():
 
     return jsonify({'following': result})
 
+@app.route('/save_selected_artists', methods=['POST'])
+def save_selected_artists():
+    # Extract the list of selected artists from the request body
+    selected_artists = request.json.get('selectedArtists', [])
+    email = request.json.get('email')
+
+    # Build the dict in the desired format
+    data_to_store = {
+        "following": selected_artists
+    }
+
+    # Convert that dict to a JSON string
+    json_string = json.dumps(data_to_store)
+
+    query = """
+        UPDATE "public"."USER"
+        SET "FOLLOWING" = %s
+        WHERE "EMAIL" = %s
+    """
+    params = (json_string, email)
+
+    # execute_post is your own function for running SQL updates
+    result = execute_post(query, params)
+
+    return jsonify({'result': 'success'})
 
 
 

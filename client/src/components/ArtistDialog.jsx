@@ -17,6 +17,7 @@ import { Skeleton } from "../components/skeleton";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import { Toaster, toaster } from "./toaster";
+import axios from 'axios';
 
 function ArtistDialog() {
   const gradientStyle = {
@@ -29,6 +30,7 @@ function ArtistDialog() {
     gap: "8px",
   };
 
+  const user = useSelector(state => state.authentication.user);
   const availableArtists = useSelector((state) => state.music.availableArtists);
   const tempAvailableArtists = useSelector((state) => state.music.tempAvailableArtists);
   const dispatch = useDispatch();
@@ -74,6 +76,23 @@ function ArtistDialog() {
       });
     }
   };
+
+  const saveToDatabase = () => {
+    const url = 'http://localhost:5000/save_selected_artists'
+    const selectedArtists = availableArtists
+      .filter((artist) => artist.clicked)
+      .map((artist) => artist.name);
+    try {
+      axios.post(url, {
+      email: user,
+      selectedArtists: selectedArtists
+      }).then((response) => {
+      console.log('saved artists to db: ', response.data.result)
+      })
+    } catch (error) {
+      console.log("Error saving artists to database: ", error);
+    }
+  }
 
   return (
     <DialogRoot
@@ -158,6 +177,7 @@ function ArtistDialog() {
                 </Button>
                 <Button onClick={() => {
                   dispatch(toggleSaveSelections());
+                  saveToDatabase();
                   toaster.create({
                     title: 'Successfully Saved Artists',
                     type: "success",
