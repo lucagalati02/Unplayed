@@ -1,0 +1,15 @@
+/* datepicker-overrides.css */
+
+/* Selected day in the calendar */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #FB5C74 !important;  /* your hex red */
+  border-color:     #FB5C74 !important;
+  color:            #FFF      !important; /* white text for contrast */
+}
+
+/* Hover state on a selected day */
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--keyboard-selected:hover {
+  background-color: #FA233B !important;  /* slightly darker on hover */
+}

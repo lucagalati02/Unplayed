@@ -8,6 +8,7 @@ export const musicSlice = createSlice({
     following: [],                // store just the array of names
     unplayed: null,
     refresh: false,
+    startDate: new Date(),
   },
   reducers: {
     setAvailableArtists: (state, action) => {
@@ -63,6 +64,10 @@ export const musicSlice = createSlice({
     setUnplayed: (state, action) => {
       state.unplayed = action.payload;
     },
+    
+    setStartDate: (state, action) => {
+      state.startDate = action.payload;
+    },
   }
 });
 
@@ -73,7 +78,8 @@ export const {
   toggleArtistClick,
   toggleSaveSelections,
   toggleExit,
-  toggleRefresh
+  toggleRefresh,
+  setStartDate,
 } = musicSlice.actions;
 
 export default musicSlice.reducer;

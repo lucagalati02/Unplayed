@@ -1,20 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Center, Text, VStack, Highlight, NativeSelect, HStack } from '@chakra-ui/react';
+import React, { useEffect, forwardRef } from 'react';
+import { Button, Center, Text, VStack, Highlight, Input, HStack } from '@chakra-ui/react';
 import ThemeChanger from '../components/ThemeChanger';
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { logout } from '../redux/authentication';
-import { setAvailableArtists, setFollowing, setUnplayed } from '../redux/music';
+import { setAvailableArtists, setFollowing, setUnplayed, setStartDate } from '../redux/music';
 import { useDispatch, useSelector } from 'react-redux';
 import * as apple_music from '../components/apple_music'
 import axios from 'axios';
 import ArtistDialog from '../components/ArtistDialog';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../components/datepicker_override.css";
 
 function Unplayed() {
   const dispatch = useDispatch();
   const following = useSelector(state => state.music.following);
   const user = useSelector(state => state.authentication.user);
   const refresh = useSelector(state => state.music.refresh);
+  const startDate = useSelector(state => state.music.startDate);
+
+  const ChakraDateInput = forwardRef(({ value, onClick, width = "105px", size = "sm" }, ref) => (
+  <Input
+    ref={ref}
+    value={value}
+    onClick={onClick}
+    readOnly
+    cursor="pointer"
+    width={width}
+    size={size}
+  />
+));
+
   
 
   const gradientStyle = {
@@ -83,26 +100,17 @@ function Unplayed() {
             Generate Unplayed Playlist {<IoMusicalNotesSharp />}
           </Button>
 
-          {/* NativeSelect look-back selector */}
-          <HStack mt={4} spacing={2}>
-            <Text>I want to get new music from the past</Text>
-            <NativeSelect.Root
-              //value={period}
-              //onChange={e => setPeriod(e.target.value)}
-              width="100px"
-              size="md"
-            >
-              <NativeSelect.Field>
-                <option value="1">month</option>
-                <option value="3">3 months</option>
-                <option value="6">6 months</option>
-                <option value="12">year</option>
-                <option value="24">2 years</option>
-                <option value="36">3 years</option>
-                <option value="all">All time</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
+          {/* Date Picker */}
+          <HStack mt={6}>
+            <Text fontSize="lg">Get music between </Text>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => dispatch(setStartDate(date))}
+              maxDate={new Date()}
+              customInput={<ChakraDateInput />}
+              dateFormat="yyyy-MM-dd"
+            />
+            <Text fontSize="lg"> - today. </Text>
           </HStack>
 
           {/* Logout Button */}
