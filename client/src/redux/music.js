@@ -1,39 +1,79 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const musicSlice = createSlice({
-    name: 'music',
-    initialState: {
-        availableArtists: null,
-        tempAvailableArtists: null,
-        following: {'following': []},
-        unplayed: null,
-        refresh: false,
-    },
-    reducers: {
-        setAvailableArtists: (state, action) => {
-            state.availableArtists = action.payload;
-            state.tempAvailableArtists = action.payload;
-        },
-        setFollowing: (state, action) => {
-            state.following = action.payload;
-        },
-        setUnplayed: (state, action) => {
-            state.unplayed = action.payload;
-        },
-        toggleArtistClick: (state, action) => {
-            state.tempAvailableArtists[action.payload - 1].clicked = !state.tempAvailableArtists[action.payload - 1].clicked;
-        },
-        toggleSaveSelections: (state, action) => {
-            state.availableArtists = state.tempAvailableArtists;
-        },
-        toggleExit: (state, action) => {
-            state.tempAvailableArtists = state.availableArtists;
-        },
-        toggleRefresh (state, action) {
-            state.refresh = !state.refresh;
-        }
-    }
-})
+  name: 'music',
+  initialState: {
+    availableArtists: [],         // start as empty arrays, not null
+    tempAvailableArtists: [],
+    following: [],                // store just the array of names
+    unplayed: null,
+    refresh: false,
+  },
+  reducers: {
+    setAvailableArtists: (state, action) => {
+      // action.payload is your fetched array of artist objects
+      const incoming = action.payload;
+      // for each artist, set clicked = true if its name is in state.following
+      const synced = incoming.map(artist => {
+        const key = artist.name || artist.pin;
+        return {
+          ...artist,
+          clicked: state.following.includes(key)
+        };
+      });
 
-export const { setAvailableArtists, setFollowing, setUnplayed, toggleArtistClick, toggleSaveSelections, toggleExit, toggleRefresh } = musicSlice.actions;
+      state.availableArtists     = synced;
+      state.tempAvailableArtists = synced;
+    },
+
+    setFollowing: (state, action) => {
+      // action.payload is your fetched array of artist names
+      state.following = action.payload;
+
+      // re-sync tempAvailableArtists so their clicked flags match
+      state.tempAvailableArtists = state.availableArtists.map(artist => {
+        const key = artist.name || artist.pin;
+        return { ...artist, clicked: state.following.includes(key) };
+      });
+    },
+
+    toggleArtistClick: (state, action) => {
+      // no change here; user toggles a single artist
+      const id = action.payload;
+      const idx = state.tempAvailableArtists.findIndex(a => a.id === id);
+      if (idx >= 0) {
+        state.tempAvailableArtists[idx].clicked = !state.tempAvailableArtists[idx].clicked;
+      }
+    },
+
+    toggleSaveSelections: (state) => {
+      // commit temp → main
+      state.availableArtists = state.tempAvailableArtists;
+    },
+
+    toggleExit: (state) => {
+      // rollback main → temp
+      state.tempAvailableArtists = state.availableArtists;
+    },
+
+    toggleRefresh: (state) => {
+      state.refresh = !state.refresh;
+    },
+
+    setUnplayed: (state, action) => {
+      state.unplayed = action.payload;
+    },
+  }
+});
+
+export const {
+  setAvailableArtists,
+  setFollowing,
+  setUnplayed,
+  toggleArtistClick,
+  toggleSaveSelections,
+  toggleExit,
+  toggleRefresh
+} = musicSlice.actions;
+
 export default musicSlice.reducer;
