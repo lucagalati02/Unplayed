@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Center, Text, VStack, Highlight } from '@chakra-ui/react';
+import { Button, Center, Text, VStack, Highlight, NativeSelect, HStack } from '@chakra-ui/react';
 import ThemeChanger from '../components/ThemeChanger';
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
@@ -82,6 +82,28 @@ function Unplayed() {
           <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6}>
             Generate Unplayed Playlist {<IoMusicalNotesSharp />}
           </Button>
+
+          {/* NativeSelect look-back selector */}
+          <HStack mt={4} spacing={2}>
+            <Text>I want to get new music from the past</Text>
+            <NativeSelect.Root
+              //value={period}
+              //onChange={e => setPeriod(e.target.value)}
+              width="100px"
+              size="md"
+            >
+              <NativeSelect.Field>
+                <option value="1">month</option>
+                <option value="3">3 months</option>
+                <option value="6">6 months</option>
+                <option value="12">year</option>
+                <option value="24">2 years</option>
+                <option value="36">3 years</option>
+                <option value="all">All time</option>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+          </HStack>
 
           {/* Logout Button */}
           <Button colorPalette="gray" mt={6} onClick={() => {
