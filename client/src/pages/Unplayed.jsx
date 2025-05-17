@@ -96,7 +96,20 @@ function Unplayed() {
           <ArtistDialog />
 
           {/* Button to generate unplayed playlist */}
-          <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6}>
+          <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6} onClick={() => {
+            const url = 'http://localhost:5000/generate_unplayed_playlist'
+            axios.post(url, {
+              params: {
+                headers: apple_music.getHeader(),
+                startDate: startDate,
+                endDate: new Date(),
+                email: user,
+                following: following
+              }
+            }).then((response) => {
+              console.log('Generate Unplayed Playlist Response: ', response)
+            })
+          }}>
             Generate Unplayed Playlist {<IoMusicalNotesSharp />}
           </Button>
 

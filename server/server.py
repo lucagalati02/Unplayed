@@ -250,9 +250,6 @@ def get_user_storefront():
 
 
 
-
-
-
 # --------------------------------------------------------
 # ------------------ Apple Music Routes ------------------
 # --------------------------------------------------------
@@ -292,6 +289,19 @@ def get_library_artists():
         return jsonify({ 'data': response }), 200
     except Exception as e:
         return jsonify({'Error getting library artists': str(e)}), 500
+    
+@app.route('/generate_unplayed_playlist', methods=['GET', 'POST'])
+def generate_unplayed_playlist():
+    # Getting the storefront
+    storefront = get_user_storefront()
+
+    # Getting the user's following
+    following = request.json.get('params').get('following')
+
+    # Getting following artist ids
+    
+
+    return jsonify({'test': 'success'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
