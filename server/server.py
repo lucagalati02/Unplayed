@@ -305,6 +305,15 @@ def generate_unplayed_playlist():
         response = requests.get(url, headers=headers).json().get('results').get('artists').get('data')[0].get('id')
         ids.append(response)
 
+    # Creating an empty playlist
+    url = 'https://api.music.apple.com/v1/me/library/playlists'
+    payload = {
+        'attributes': {
+            'name': f'Unplayed',
+        }
+    }
+    response = requests.post(url, headers=headers, json=payload).json()
+
     return jsonify({'test': 'success'}), 200
 
 if __name__ == '__main__':
