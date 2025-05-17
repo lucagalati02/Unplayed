@@ -249,7 +249,6 @@ def get_user_storefront():
 
 
 
-
 # --------------------------------------------------------
 # ------------------ Apple Music Routes ------------------
 # --------------------------------------------------------
@@ -292,6 +291,7 @@ def get_library_artists():
     
 @app.route('/generate_unplayed_playlist', methods=['GET', 'POST'])
 def generate_unplayed_playlist():
+    headers = request.json.get('params').get('headers')
     # Getting the storefront
     storefront = get_user_storefront()
 
@@ -299,7 +299,11 @@ def generate_unplayed_playlist():
     following = request.json.get('params').get('following')
 
     # Getting following artist ids
-    
+    ids = []
+    for artist in following:
+        url = f'https://api.music.apple.com/v1/catalog/{storefront}/search?types=artists&term={artist}&limit=1'
+        response = requests.get(url, headers=headers).json().get('results').get('artists').get('data')[0].get('id')
+        ids.append(response)
 
     return jsonify({'test': 'success'}), 200
 
