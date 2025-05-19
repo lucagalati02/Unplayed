@@ -1,5 +1,5 @@
 import React, { useEffect, forwardRef } from 'react';
-import { Button, Center, Text, VStack, Highlight, Input, HStack } from '@chakra-ui/react';
+import { Button, Center, Text, VStack, Highlight, Input, HStack, Spinner } from '@chakra-ui/react';
 import ThemeChanger from '../components/ThemeChanger';
 import { IoMusicalNotesSharp } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
@@ -19,6 +19,7 @@ function Unplayed() {
   const user = useSelector(state => state.authentication.user);
   const refresh = useSelector(state => state.music.refresh);
   const startDate = useSelector(state => state.music.startDate);
+  const [generating, setGenerating] = React.useState(false);
 
   const ChakraDateInput = forwardRef(({ value, onClick, width = "105px", size = "sm" }, ref) => (
   <Input
@@ -96,22 +97,26 @@ function Unplayed() {
           <ArtistDialog />
 
           {/* Button to generate unplayed playlist */}
-          <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6} onClick={() => {
-            const url = 'http://localhost:5000/generate_unplayed_playlist'
-            axios.post(url, {
-              params: {
-                headers: apple_music.getHeader(),
-                startDate: startDate,
-                endDate: new Date(),
-                email: user,
-                following: following
-              }
-            }).then((response) => {
-              console.log('Generate Unplayed Playlist Response: ', response)
-            })
-          }}>
-            Generate Unplayed Playlist {<IoMusicalNotesSharp />}
-          </Button>
+          {generating ? (<Spinner mt={6}></Spinner>) : (
+            <Button disabled={following.length == 0 ? true : false} style={gradientStyle} size="lg" mt={6} onClick={() => {
+              setGenerating(true)
+              const url = 'http://localhost:5000/generate_unplayed_playlist'
+              axios.post(url, {
+                params: {
+                  headers: apple_music.getHeader(),
+                  startDate: startDate,
+                  endDate: new Date(),
+                  email: user,
+                  following: following
+                }
+              }).then((response) => {
+                console.log('Generate Unplayed Playlist Response: ', response)
+                setGenerating(false)
+              })
+            }}>
+              Generate Unplayed Playlist {<IoMusicalNotesSharp />}
+            </Button>
+          )}
 
           {/* Date Picker */}
           <HStack mt={6}>
