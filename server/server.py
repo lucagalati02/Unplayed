@@ -291,71 +291,74 @@ def get_library_artists():
     
 @app.route('/generate_unplayed_playlist', methods=['GET', 'POST'])
 def generate_unplayed_playlist():
-    headers = request.json.get('params').get('headers')
-    # Getting the storefront
-    storefront = get_user_storefront()
-    start_date = date.fromisoformat(request.json.get('params').get('startDate').split("T")[0])
-    end_date = date.fromisoformat(request.json.get('params').get('endDate').split("T")[0])
+    try:
+        headers = request.json.get('params').get('headers')
+        # Getting the storefront
+        storefront = get_user_storefront()
+        start_date = date.fromisoformat(request.json.get('params').get('startDate').split("T")[0])
+        end_date = date.fromisoformat(request.json.get('params').get('endDate').split("T")[0])
 
-    # Getting the user's following
-    following = request.json.get('params').get('following')
-    print('GOT FOLLOWING')
+        # Getting the user's following
+        following = request.json.get('params').get('following')
+        print('GOT FOLLOWING')
 
-    # Getting following artist ids
-    ids = []
-    for artist in following:
-        url = f'https://api.music.apple.com/v1/catalog/{storefront}/search?types=artists&term={artist}&limit=1'
-        response = requests.get(url, headers=headers).json().get('results').get('artists').get('data')[0].get('id')
-        ids.append(response)
-    print('GOT ARTIST IDS')
+        # Getting following artist ids
+        ids = []
+        for artist in following:
+            url = f'https://api.music.apple.com/v1/catalog/{storefront}/search?types=artists&term={artist}&limit=1'
+            response = requests.get(url, headers=headers).json().get('results').get('artists').get('data')[0].get('id')
+            ids.append(response)
+        print('GOT ARTIST IDS')
 
-    # Creating an empty playlist
-    url = 'https://api.music.apple.com/v1/me/library/playlists'
-    payload = {
-        'attributes': {
-            'name': f'Unplayed',
-        }
-    }
-    response = requests.post(url, headers=headers, json=payload).json()
-    playlist_id = response.get('data')[0].get('id')
-    print('CREATED PLAYLIST')
-
-    # Getting every song
-    songs = []
-    for artist in ids:
-        url = f"https://api.music.apple.com/v1/catalog/{storefront}/artists/{artist}/songs?limit={20}"
-        while url:
-            response = requests.get(url, headers=headers).json()
-            for song in response.get('data'):
-                release_date = song.get('attributes', {}).get('releaseDate')
-                if not isinstance(release_date, str):
-                    continue
-                try:
-                    release_date = date.fromisoformat(release_date)
-                except ValueError:
-                    continue
-                if start_date <= release_date <= end_date:
-                    songs.append(song.get('id'))
-            url = f"https://api.music.apple.com{response.get('next')}" if response.get('next') else None
-    print('GOT SONGS')
-
-    # Adding songs to the playlist
-    url = f"https://api.music.apple.com/v1/me/library/playlists/{playlist_id}/tracks"
-    for batch in range(0, len(songs), 150):
-        chunk = songs[batch : batch + 150]
+        # Creating an empty playlist
+        url = 'https://api.music.apple.com/v1/me/library/playlists'
         payload = {
-            'data': [
-                {
-                    'id': song,
-                    'type': 'songs'
-                } for song in chunk
-            ]
+            'attributes': {
+                'name': f'Unplayed',
+            }
         }
+        response = requests.post(url, headers=headers, json=payload).json()
+        playlist_id = response.get('data')[0].get('id')
+        print('CREATED PLAYLIST')
 
-        response = requests.post(url, headers=headers, json = payload)
-    print('ADDED SONGS TO PLAYLIST')
-    
-    return jsonify({'test': 'success'}), 200
+        # Getting every song
+        songs = []
+        for artist in ids:
+            url = f"https://api.music.apple.com/v1/catalog/{storefront}/artists/{artist}/songs?limit={20}"
+            while url:
+                response = requests.get(url, headers=headers).json()
+                for song in response.get('data'):
+                    release_date = song.get('attributes', {}).get('releaseDate')
+                    if not isinstance(release_date, str):
+                        continue
+                    try:
+                        release_date = date.fromisoformat(release_date)
+                    except ValueError:
+                        continue
+                    if start_date <= release_date <= end_date:
+                        songs.append(song.get('id'))
+                url = f"https://api.music.apple.com{response.get('next')}" if response.get('next') else None
+        print('GOT SONGS')
+
+        # Adding songs to the playlist
+        url = f"https://api.music.apple.com/v1/me/library/playlists/{playlist_id}/tracks"
+        for batch in range(0, len(songs), 150):
+            chunk = songs[batch : batch + 150]
+            payload = {
+                'data': [
+                    {
+                        'id': song,
+                        'type': 'songs'
+                    } for song in chunk
+                ]
+            }
+
+            response = requests.post(url, headers=headers, json = payload)
+        print('ADDED SONGS TO PLAYLIST')
+        
+        return jsonify({'test': 'success'}), 200
+    except Exception as e:
+        return jsonify({'Error generating unplayed playlist': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
